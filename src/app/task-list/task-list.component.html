@@ -1,0 +1,101 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="table-responsive mt-3">
+      <button
+        class="btn btn-sm btn-outline-success float-end h-36"
+        (click)="addNewTask()"
+      >
+        Add New Task
+      </button>
+
+      <input
+        type="text"
+        class="form-control w-20 float-end mr-1"
+        placeholder="Search tasks..."
+        [(ngModel)]="searchText"
+      />
+      <div class="task-list">
+        <h2>Task List</h2>
+
+        <table class="table table-striped text-center">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Created Date</th>
+              <th>Modified Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let task of tasks | search : searchText; let i = index"
+              [class.editing]="task.editing"
+            >
+              <td>{{ i + 1 }}</td>
+              <td>
+                <span *ngIf="!task.editing">{{ task.name }}</span>
+                <input
+                  *ngIf="task.editing"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="task.name"
+                  placeholder="Enter task name"
+                />
+              </td>
+              <td>
+                <span *ngIf="!task.editing">{{ task.status }}</span>
+                <select
+                  *ngIf="task.editing"
+                  class="form-control"
+                  [(ngModel)]="task.status"
+                >
+                  <option value="open">Open</option>
+                  <option value="closed">Closed</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </td>
+              <td>{{ task.createdDate }}</td>
+              <td *ngIf="task.modifiedDate != ''">{{ task.modifiedDate }}</td>
+              <td *ngIf="task.modifiedDate == ''">-</td>
+              <td>
+                <button
+                  class="btn btn-primary btn-sm mr-1"
+                  *ngIf="!task.editing"
+                  (click)="editTask(task)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  *ngIf="!task.editing"
+                  (click)="deleteTask(task)"
+                >
+                  Delete
+                </button>
+                <button
+                  class="btn btn-success btn-sm mr-1"
+                  *ngIf="task.editing"
+                  (click)="saveTask(task)"
+                >
+                  Save
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  *ngIf="task.editing"
+                  (click)="cancelEdit(task)"
+                >
+                  Cancel
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="tasks.length === 0" class="empty-list">
+          <p>No tasks found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
